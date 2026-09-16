@@ -550,6 +550,8 @@ function majMateriau(c) {
 const utile = c => c.masque === 'blanc' ? !!c.tex : (!!c.tex || !!c.couleur);
 const pochoir = c => !!c.tex && c.masque === 'blanc';
 
+let surMajOrdre = null;
+
 function majOrdre() {
   couches.forEach((c, i) => {
     const z = 0.0002 * (i + 1), on = c.visible && !repEl.checked;
@@ -566,6 +568,7 @@ function majOrdre() {
       mesh.visible = on && (pochoir(c) ? true : !!c.tex);
     });
   });
+  if (surMajOrdre) surMajOrdre();
   rendre();
 }
 
@@ -967,29 +970,310 @@ function appliquerEtat(e) {
   rendre();
 }
 
+/* --- mur de boîtes ----------------------------------------------------- */
+const FACES_MUR = [
+  ['pAvant', 'Avant'], ['pArriere', 'Arrière'], ['pDroite', 'Droite'],
+  ['pGauche', 'Gauche'], ['couvG', 'Couvercle'], ['fondD', 'Dessous']
+];
+const MUR = { n: 9, faceA: 'pAvant', faceB: '', actif: false };
+try { Object.assign(MUR, JSON.parse(localStorage.getItem('pp-mur') || '{}')); } catch (e) {}
+const sauverMur = () => { try { localStorage.setItem('pp-mur', JSON.stringify(MUR)); } catch (e) {} };
+
+let mur = null;
+const murBtn = document.getElementById('mur');
+const murInfo = document.getElementById('murinfo');
+
+/* La caisse fermée est clonée telle quelle : les clones partagent géométries
+   et matériaux, donc un changement de calque se voit sur tout le mur. */
+function construireMur() {
+  const tSauv = +sl.value / 100;
+  fold(1);
+  root.updateWorldMatrix(true, true);
+
+  const cles = [MUR.faceA, MUR.faceB].filter(k => k && meshes[k]);
+  if (!cles.length) cles.push('pAvant');
+  /* angle de rotation qui amène la face choisie vers l'avant (+Z) */
+  const angles = cles.map(k => {
+    const n = new THREE.Vector3(0, 0, 1).transformDirection(meshes[k].matrixWorld);
+    return -Math.atan2(n.x, n.z);
+  });
+
+  const sonde = root.clone(true);
+  const bb = new THREE.Box3().setFromObject(sonde);
+  const t = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
+  const cell = Math.max(t.x, t.z) * 1.02, etage = t.y * 1.005;
+
+  let rangs = 3;
+  while (Math.ceil(MUR.n / rangs) > rangs * 2) rangs++;
+  const cols = Math.ceil(MUR.n / rangs);
+
+  /* L'alternance se fait colonne par colonne : chaque colonne garde une seule
+     empreinte, le mur reste jointif et les deux faces se lisent en bandes. */
+  const largeur = a => Math.abs(Math.cos(a)) * t.x + Math.abs(Math.sin(a)) * t.z;
+  const profond = a => Math.abs(Math.cos(a)) * t.z + Math.abs(Math.sin(a)) * t.x;
+  const xs = [];
+  let total = 0;
+  for (let col = 0; col < cols; col++) {
+    const a = angles[col % angles.length];
+    xs.push(total + largeur(a) / 2);
+    total += largeur(a) * 1.004;
+  }
+  const profMax = Math.max(...angles.map(profond));
+
+  const g = new THREE.Group();
+  for (let i = 0; i < MUR.n; i++) {
+    const col = Math.floor(i / rangs), rang = i % rangs;
+    const a = angles[col % angles.length];
+    const piv = new THREE.Group();
+    piv.rotation.y = a;
+    const b = i === 0 ? sonde : root.clone(true);
+    b.position.sub(c);
+    piv.add(b);
+    /* faces avant alignées sur un même plan, quelle que soit l'orientation */
+    piv.position.set(xs[col] - total / 2, rang * etage, (profMax - profond(a)) / -2);
+    g.add(piv);
+  }
+  fold(tSauv);
+  if (murInfo) murInfo.textContent = MUR.n + ' boîtes — ' + rangs + ' étages × ' + cols +
+    ' colonnes, face' + (cles.length > 1 ? 's ' : ' ') +
+    cles.map(k => (FACES_MUR.find(f => f[0] === k) || [, k])[1]).join(' / ');
+  return g;
+}
+
+function afficherMur(on, refaire) {
+  MUR.actif = on;
+  sauverMur();
+  if (murBtn) {
+    murBtn.textContent = on ? 'Revenir au patron' : 'Wall';
+    murBtn.style.background = on ? '#8a5a2b' : '';
+  }
+  if (on) {
+    if (!mur || refaire) mur = construireMur();
+    stage.setObject(mur);
+  } else {
+    stage.setObject(root);
+  }
+  rendre();
+}
+
+if (murBtn) murBtn.addEventListener('click', () => afficherMur(!MUR.actif, true));
+
+/* Les clones figent la visibilité des calques : dès qu'un calque apparaît ou
+   disparaît (image chargée, calque masqué…), le mur est reconstruit. */
+let murEnAttente = false;
+surMajOrdre = () => {
+  if (!MUR.actif || murEnAttente) return;
+  murEnAttente = true;
+  requestAnimationFrame(() => {
+    murEnAttente = false;
+    if (MUR.actif) afficherMur(true, true);
+  });
+};
+
+const murN = document.getElementById('murn'), murNV = document.getElementById('murnv');
+if (murN) {
+  murN.value = MUR.n;
+  if (murNV) murNV.textContent = MUR.n;
+  murN.addEventListener('input', () => {
+    MUR.n = +murN.value;
+    if (murNV) murNV.textContent = murN.value;
+    sauverMur();
+    if (MUR.actif) afficherMur(true, true);
+  });
+}
+for (const [id, cle, vide] of [['murfa', 'faceA', null], ['murfb', 'faceB', '— aucune —']]) {
+  const el = document.getElementById(id);
+  if (!el) continue;
+  if (vide) {
+    const o = document.createElement('option');
+    o.value = ''; o.textContent = vide; o.selected = !MUR[cle];
+    el.append(o);
+  }
+  for (const [k, nom] of FACES_MUR) {
+    const o = document.createElement('option');
+    o.value = k; o.textContent = nom; o.selected = MUR[cle] === k;
+    el.append(o);
+  }
+  el.addEventListener('change', () => {
+    MUR[cle] = el.value;
+    sauverMur();
+    if (MUR.actif) afficherMur(true, true);
+  });
+}
+
+/* au chargement, on laisse les textures de départ arriver avant de cloner :
+   les clones figent l'état des calques au moment du clonage. */
+if (MUR.actif) setTimeout(() => afficherMur(true, true), 700);
+
 const partEl = document.getElementById('part');
-const partMsg = document.getElementById('partmsg');
 const SERVI = location.protocol.startsWith('http');
+
+/* --- snapshots : état complet + miniature du rendu --------------------- */
+const snapsEl = document.getElementById('snaps');
+const snapAdd = document.getElementById('snapadd');
+const snapEtat = document.getElementById('snapetat');
+const CLE = 'patron-plie-snaps-' + vue;
+let snaps = [];
+let apiOk = true;
+
+/* La toile WebGL garde sa dernière image (preserveDrawingBuffer) : on la
+   redessine en petit avec le même étalonnage qu'à l'écran. */
+function miniature() {
+  const src = stage._renderer && stage._renderer.domElement;
+  if (!src) return null;
+  rendre();
+  const L = 264, H = Math.max(1, Math.round(L * src.height / src.width));
+  const c = document.createElement('canvas');
+  c.width = L; c.height = H;
+  const x = c.getContext('2d');
+  x.fillStyle = '#efe9df'; x.fillRect(0, 0, L, H);
+  x.filter = 'saturate(' + GRADE.satur + ') contrast(1.05)';
+  x.drawImage(src, 0, 0, L, H);
+  return c.toDataURL('image/jpeg', 0.82);
+}
+
+const heure = d => new Date(d).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+const signature = l => l.map(s => s.id + ':' + (s.nom || '')).join('|');
+const sauverLocal = () => { try { localStorage.setItem(CLE, JSON.stringify(snaps)); } catch (e) {} };
+const chargerLocal = () => {
+  try { snaps = JSON.parse(localStorage.getItem(CLE) || '[]'); } catch (e) { snaps = []; }
+  dessinerSnaps();
+};
+
+function dessinerSnaps() {
+  if (!snapsEl) return;
+  snapsEl.textContent = '';
+  if (!snaps.length) {
+    const v = document.createElement('span');
+    v.className = 'vide';
+    v.textContent = 'Aucun snapshot — règle la boîte, puis « + Snapshot ».';
+    snapsEl.append(v);
+    return;
+  }
+  for (const s of snaps) {
+    const b = document.createElement('div');
+    b.className = 'snap';
+    const img = document.createElement('img');
+    img.src = s.vignette || '';
+    img.alt = s.nom || 'snapshot';
+    img.title = 'Rouvrir ce snapshot';
+    img.addEventListener('click', () => {
+      appliquerEtat(s.etat);
+      if (snapEtat) snapEtat.textContent = '« ' + (s.nom || heure(s.date)) + ' » rouvert';
+    });
+    const nom = document.createElement('input');
+    nom.className = 'nom';
+    nom.value = s.nom || heure(s.date);
+    nom.addEventListener('change', () => {
+      s.nom = nom.value;
+      if (SERVI) fetch('/api/snaps' + qs + '&id=' + s.id, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom: s.nom })
+      }).catch(() => {});
+      else sauverLocal();
+    });
+    const del = document.createElement('button');
+    del.type = 'button'; del.className = 'del'; del.textContent = '✕';
+    del.title = 'Supprimer ce snapshot';
+    del.addEventListener('click', () => {
+      snaps = snaps.filter(x => x !== s);
+      dessinerSnaps();
+      if (SERVI) fetch('/api/snaps' + qs + '&id=' + s.id, { method: 'DELETE' }).catch(() => {});
+      else sauverLocal();
+    });
+    b.append(img, nom, del);
+    snapsEl.append(b);
+  }
+}
+
+function prendreSnap() {
+  const s = { id: 'l' + Date.now().toString(36), nom: '', date: Date.now(),
+              vignette: miniature(), etat: lireEtat() };
+  snaps = [...snaps, s];
+  dessinerSnaps();
+  if (snapsEl) snapsEl.scrollLeft = snapsEl.scrollWidth;
+  if (SERVI && apiOk) fetch('/api/snaps' + qs, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ etat: s.etat, vignette: s.vignette, nom: s.nom })
+  }).then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(() => syncSnaps())
+    .catch(() => { apiOk = false; sauverLocal(); });
+  else sauverLocal();
+}
+
+/* Servie en http mais sans l'API (aperçu, hébergement statique) : on retombe
+   sur le localStorage au lieu d'une barre muette. */
+function syncSnaps() {
+  if (!SERVI || !apiOk) return Promise.resolve();
+  return fetch('/api/snaps' + qs, { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(l => {
+      /* on ne redessine que si la liste a bougé : sinon la synchro écraserait
+         un nom en cours de frappe à chaque tour. */
+      if (!Array.isArray(l) || signature(l) === signature(snaps)) return;
+      snaps = l;
+      dessinerSnaps();
+    }).catch(() => { apiOk = false; chargerLocal(); });
+}
+
+if (snapAdd) snapAdd.addEventListener('click', prendreSnap);
 
 if (!SERVI) {
   if (partEl) partEl.closest('.bloc-part')?.remove();
+  chargerLocal();
 } else {
-  fetch('/api/state' + qs).then(r => r.json()).then(appliquerEtat).catch(() => {});
-  if (partEl) partEl.addEventListener('click', () => {
-    fetch('/api/state' + qs, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(lireEtat())
-    }).then(() => {
-      if (partMsg) partMsg.textContent = 'Vue « ' + vue + ' » enregistrée — ' +
-        new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    }).catch(() => { if (partMsg) partMsg.textContent = 'échec de l’enregistrement'; });
-  });
+  const diff = document.getElementById('diffuser');
+  const suiv = document.getElementById('suivre');
   const rec = document.getElementById('recharger');
-  if (rec) rec.addEventListener('click', () => {
-    fetch('/api/state' + qs, { cache: 'no-store' }).then(r => r.json()).then(e => {
+  let dernierMaj = 0, dernierPousse = '';
+
+  const pousser = (mot) => fetch('/api/state' + qs, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(lireEtat())
+  }).then(r => r.json()).then(d => {
+    dernierMaj = d.maj || Date.now();
+    if (partMsg) partMsg.textContent = mot + ' — ' + heure(dernierMaj);
+  }).catch(() => { if (partMsg) partMsg.textContent = 'échec de l’enregistrement'; });
+
+  const tirer = (force) => fetch('/api/state' + qs, { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw 0; return r.json(); }).then(e => {
+      if (!e) return null;
+      if (!force && !(e.maj > dernierMaj)) return null;
+      dernierMaj = e.maj || Date.now();
       appliquerEtat(e);
-      if (partMsg) partMsg.textContent = e ? 'vue rechargée' : 'aucune vue enregistrée';
+      return e;
+    }).catch(() => null);
+
+  tirer(true);
+  dessinerSnaps();
+  syncSnaps();
+
+  if (partEl) partEl.addEventListener('click', () => pousser('vue enregistrée'));
+  if (rec) rec.addEventListener('click', () => tirer(true).then(e => {
+    if (partMsg) partMsg.textContent = e ? 'vue rechargée' : 'aucune vue enregistrée';
+  }));
+
+  for (const el of [diff, suiv]) {
+    if (!el) continue;
+    el.checked = localStorage.getItem('pp-' + el.id) === '1';
+    el.addEventListener('change', () => {
+      localStorage.setItem('pp-' + el.id, el.checked ? '1' : '0');
+      /* diffuser et suivre s'excluent : sinon les deux pages se renvoient
+         leur état en boucle. */
+      if (el.checked && el === diff && suiv) { suiv.checked = false; localStorage.setItem('pp-suivre', '0'); }
+      if (el.checked && el === suiv && diff) { diff.checked = false; localStorage.setItem('pp-diffuser', '0'); }
     });
-  });
+  }
+
+  /* Synchro automatique : la liste des snapshots tout le temps, la vue en
+     cours dans un seul sens à la fois. */
+  setInterval(() => {
+    syncSnaps();
+    if (diff && diff.checked) {
+      const s = JSON.stringify(lireEtat());
+      if (s !== dernierPousse) { dernierPousse = s; pousser('vue diffusée'); }
+    } else if (suiv && suiv.checked) {
+      tirer(false).then(e => { if (e && partMsg) partMsg.textContent = 'vue reçue — ' + heure(dernierMaj); });
+    }
+  }, 2500);
 }

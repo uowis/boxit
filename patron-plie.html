@@ -40,6 +40,33 @@
           color: #1c1917; letter-spacing: .02em; }
   .sect button { font: inherit; font-size: 11px; font-weight: 500; padding: 4px 8px; border: 0;
                  background: #1c1917; color: #fff; cursor: pointer; }
+  summary.sect { cursor: pointer; list-style: none; }
+  #snapbar { position: fixed; left: 336px; right: 0; bottom: 0; z-index: 5; pointer-events: none;
+             display: flex; align-items: flex-end; gap: 8px; padding: 9px 300px 9px 12px;
+             overflow-x: auto; font-size: 11px; color: #57534e; }
+  #snapbar > * { pointer-events: auto; }
+  #snapbar .vide { padding: 14px 2px; color: #8a7f72; background: rgba(252,250,247,.9); }
+  .snap { position: relative; flex: 0 0 auto; width: 132px; border: 1px solid #ddd4c6;
+          background: #fff; cursor: pointer; padding: 0; text-align: left; font: inherit;
+          box-shadow: 0 1px 6px rgba(28,25,23,.12); }
+  .snap:hover { border-color: #1c1917; }
+  .snap img { display: block; width: 100%; height: 76px; object-fit: cover; background: #efe9df; }
+  .snap .nom { display: block; width: 100%; box-sizing: border-box; padding: 4px 6px 5px;
+               font: inherit; font-size: 10.5px; color: #1c1917; border: 0; background: transparent; }
+  .snap .del { position: absolute; top: 2px; right: 2px; border: 0; cursor: pointer;
+               background: rgba(28,25,23,.72); color: #fff; font: inherit; font-size: 10px;
+               line-height: 1; padding: 3px 5px; }
+  #snapadd { flex: 0 0 auto; align-self: stretch; min-width: 112px; border: 1px dashed #b9ab97;
+             background: rgba(255,255,255,.92); color: #1c1917; font: inherit; font-size: 11px; cursor: pointer; }
+  #snapadd:hover { background: #1c1917; color: #fff; }
+  #snapetat { flex: 0 0 auto; align-self: center; white-space: nowrap; color: #8a7f72;
+              background: rgba(252,250,247,.9); padding: 2px 6px; }
+  #snaps { display: flex; gap: 8px; }
+  #snaps > * { pointer-events: auto; }
+  .hud { padding-bottom: 8px; }
+  summary.sect::-webkit-details-marker { display: none; }
+  summary.sect::after { content: '+'; font-weight: 500; color: #8a7f72; }
+  details[open] > summary.sect::after { content: '–'; }
   .cq { border: 1px solid #e0d8cc; padding: 9px 10px 11px; margin-bottom: 8px; background: #fbf9f6; }
   .cqt { display: flex; align-items: center; gap: 4px; margin-bottom: 7px; }
   .cqn { flex: 1; min-width: 0; font: inherit; font-size: 11.5px; font-weight: 600; color: #1c1917;
@@ -81,7 +108,8 @@
   <input type="range" id="t" min="0" max="100" value="0" />
   <div class="row" style="margin-top:12px"><label for="fond">Couleur du carton</label><input type="color" id="fond" value="#c39a6b" /></div>
   <div class="row"><label for="rep">Couleurs de repérage</label><input type="checkbox" id="rep" /></div>
-  <div class="sect"><span>Studio</span></div>
+  <details id="studio">
+  <summary class="sect"><span>Studio</span></summary>
   <select id="envsel" style="width:100%;font:inherit;font-size:11.5px"></select>
   <button type="button" id="envimp" class="plein" style="margin-top:6px">Importer un panoramique…</button>
   <div id="envnom" class="cqf"></div>
@@ -95,13 +123,25 @@
   <input type="range" id="expo" min="40" max="240" value="128" />
   <div class="row"><label for="satur">Vivacité</label><span id="saturv">124 %</span></div>
   <input type="range" id="satur" min="60" max="200" value="124" />
+  </details>
   <div class="sect"><span>Calques</span><button type="button" id="add">+ Calque</button></div>
   <div id="couches"></div>
   <input type="file" id="fchoix" accept="image/*" hidden />
+  <details id="murbox">
+  <summary class="sect"><span>Mur de boîtes</span></summary>
+  <div class="row"><label for="murn">Nombre de boîtes</label><span id="murnv">9</span></div>
+  <input type="range" id="murn" min="3" max="40" value="9" />
+  <div class="row"><label for="murfa">Face A</label><select id="murfa" style="font:inherit;font-size:11px"></select></div>
+  <div class="row"><label for="murfb">Face B (alternée)</label><select id="murfb" style="font:inherit;font-size:11px"></select></div>
+  <div id="murinfo" class="cqf"></div>
+  </details>
+  <button type="button" id="mur" class="plein" style="margin-top:8px">Wall</button>
   <div class="bloc-part">
     <div class="sect"><span>Partage client</span></div>
     <button type="button" id="part" class="plein">Enregistrer cette vue</button>
     <button type="button" id="recharger" class="plein" style="margin-top:4px">Recharger la vue</button>
+    <div class="row" style="margin-top:6px"><label for="diffuser">Diffuser ma vue</label><input type="checkbox" id="diffuser" /></div>
+    <div class="row"><label for="suivre">Suivre la vue partagée</label><input type="checkbox" id="suivre" /></div>
     <div id="partmsg" class="cqf"></div>
   </div>
   <div class="leg" style="display:none" id="leg">
@@ -113,6 +153,11 @@
   </div>
 </div>
 <three-d-stage name="patron-plie" background="#efe9df"></three-d-stage>
+<div id="snapbar">
+  <button type="button" id="snapadd">+ Snapshot</button>
+  <div id="snaps" style="display:flex;gap:8px"></div>
+  <span id="snapetat"></span>
+</div>
 <template id="__bundler_thumbnail">
   <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
     <rect width="120" height="120" fill="#c39a6b" />
