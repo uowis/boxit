@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Encoche 170 × 40 r20 — cloison + languette</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<style>
+  html, body { margin: 0; height: 100%; font-family: ui-sans-serif, system-ui, sans-serif; }
+  three-d-stage:not(:defined) { visibility: hidden; }
+  three-d-stage { display: block; width: 100vw; height: 100vh; }
+  .hud {
+    position: absolute; top: 20px; left: 20px; z-index: 5;
+    background: rgba(255,255,255,.9); border: 1px solid #ddd6cc;
+    padding: 16px 18px; max-width: 300px;
+  }
+  .hud h1 { font-size: 14px; margin: 0 0 10px; letter-spacing: .02em; color: #1c1917; }
+  .hud dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin: 0 0 14px; font-size: 12.5px; }
+  .hud dt { display: flex; align-items: center; gap: 7px; color: #57534e; }
+  .hud dd { margin: 0; color: #1c1917; font-variant-numeric: tabular-nums; }
+  .sw { width: 11px; height: 11px; flex: none; border: 1px solid rgba(0,0,0,.25); }
+  .hud p { font-size: 12px; line-height: 1.5; color: #57534e; margin: 0 0 14px; }
+  button {
+    font: inherit; font-size: 12.5px; padding: 7px 14px; cursor: pointer;
+    background: #1c1917; color: #fff; border: 0;
+  }
+  button:hover { background: #44403c; }
+</style>
+</head>
+<body>
+<div class="hud">
+  <h1>Encoche 170 × 40 mm, rayon 20</h1>
+  <dl>
+    <dt><span class="sw" style="background:#d93025"></span>Encoche</dt><dd>évidée dans la cloison</dd>
+    <dt><span class="sw" style="background:#3d7ea6"></span>Languette</dt><dd>saillante sur le rabat</dd>
+    <dt><span class="sw" style="background:#c8a97e"></span>Carton</dt><dd>3 mm</dd>
+  </dl>
+  <p>Les deux tracés sont identiques : la languette vient remplir l'encoche, affleurante. Sur le patron à plat, l'un est une découpe en creux, l'autre une découpe en saillie.</p>
+  <button id="toggle">Voir assemblé</button>
+</div>
+<three-d-stage name="encoche-cloison" background="#efe9df"></three-d-stage>
+<script src="three-d-stage.js"></script>
+<script type="module" src="encoche.js"></script>
+</body>
+</html>

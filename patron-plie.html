@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Pliage du patron — contrôle</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<style>
+  html, body { margin: 0; height: 100%; font-family: ui-sans-serif, system-ui, sans-serif; }
+  three-d-stage:not(:defined) { visibility: hidden; }
+  three-d-stage { display: block; width: 100vw; height: 100vh; }
+  .hud { position: absolute; top: 20px; left: 20px; z-index: 5; background: rgba(255,255,255,.92);
+         border: 1px solid #ddd6cc; padding: 16px 18px; width: 250px; }
+  .hud h1 { font-size: 13px; margin: 0 0 4px; color: #1c1917; }
+  .hud p { font-size: 11.5px; line-height: 1.45; color: #6b6158; margin: 0 0 12px; }
+  input[type=range] { width: 100%; }
+  .row { display: flex; justify-content: space-between; font-size: 11.5px; color: #1c1917;
+         font-variant-numeric: tabular-nums; margin-bottom: 4px; white-space: nowrap; gap: 10px; }
+  .leg { display: grid; gap: 5px; margin-top: 14px; font-size: 11px; color: #57534e; }
+  .leg span { display: flex; align-items: center; gap: 7px; }
+  .sw { width: 11px; height: 11px; border: 1px solid rgba(0,0,0,.25); }
+  .hud { max-height: calc(100vh - 40px); overflow-y: auto; width: 264px; }
+  .sect { display: flex; justify-content: space-between; align-items: center; margin: 16px 0 8px;
+          padding-top: 12px; border-top: 1px solid #e4ddd2; font-size: 11.5px; font-weight: 600;
+          color: #1c1917; letter-spacing: .02em; }
+  .sect button { font: inherit; font-size: 11px; font-weight: 500; padding: 4px 8px; border: 0;
+                 background: #1c1917; color: #fff; cursor: pointer; }
+  .cq { border: 1px solid #e0d8cc; padding: 9px 10px 11px; margin-bottom: 8px; background: #fbf9f6; }
+  .cqt { display: flex; align-items: center; gap: 4px; margin-bottom: 7px; }
+  .cqn { flex: 1; min-width: 0; font: inherit; font-size: 11.5px; font-weight: 600; color: #1c1917;
+         border: 0; background: transparent; padding: 1px 0; }
+  .cqn:focus { outline: 1px solid #c9b393; }
+  .cqo { display: flex; gap: 2px; }
+  .cqo button { font-size: 11px; line-height: 1; width: 19px; height: 19px; padding: 0; border: 0;
+                background: #ece5db; color: #4b443c; cursor: pointer; }
+  .cqo button:hover { background: #d9cfc1; }
+  .plein { width: 100%; padding: 5px 8px; font: inherit; font-size: 11px; border: 0;
+           background: #1c1917; color: #fff; cursor: pointer; }
+  .plein:hover { background: #3f3a35; }
+  .cq .plein { width: 100%; padding: 5px 8px; font: inherit; font-size: 11px; border: 0;
+               background: #1c1917; color: #fff; cursor: pointer; }
+  .cq .plein:hover { background: #3f3a35; }
+  .cqf { font-size: 10px; color: #8a8078; margin: 4px 0 6px; word-break: break-all; }
+  .cqf .lien { font: inherit; font-size: 10px; border: 0; background: none; padding: 0;
+               color: #a8812c; text-decoration: underline; cursor: pointer; }
+  .cq select { font: inherit; font-size: 11px; max-width: 150px; }
+  .cqc { display: flex; align-items: center; gap: 5px; }
+  .cqc input[type=color] { width: 40px; height: 18px; padding: 0; border: 1px solid #ccc; }
+  .cq .row { margin: 5px 0 2px; }
+  .cq label { color: #6b6158; font-weight: 400; }
+  #imp { width: 100%; margin-top: 8px; padding: 7px 8px; font: inherit; font-size: 11.5px;
+         background: #1c1917; color: #fff; border: 0; cursor: pointer; }
+  #imp:hover { background: #3f3a35; }
+  #dor { width: 100%; margin-top: 8px; padding: 7px 8px; font: inherit; font-size: 11.5px;
+         background: #a8812c; color: #fff; border: 0; cursor: pointer; }
+  #dor:hover { background: #c39b40; }
+  #impnom, #dornom { font-size: 10.5px; color: #8a8078; margin-top: 5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="hud">
+  <h1>Contrôle du pliage</h1>
+  <p>Même table de plis que le MaxScript : mêmes pivots, mêmes angles, même hiérarchie.</p>
+  <div class="row"><label for="t">Pliage</label><span id="tv">0 %</span></div>
+  <div class="row"><span style="color:#7a6f62">Phase</span><span id="ph">à plat</span></div>
+  <input type="range" id="t" min="0" max="100" value="0" />
+  <div class="row" style="margin-top:12px"><label for="fond">Couleur du carton</label><input type="color" id="fond" value="#c39a6b" /></div>
+  <div class="row"><label for="rep">Couleurs de repérage</label><input type="checkbox" id="rep" /></div>
+  <div class="sect"><span>Studio</span></div>
+  <select id="envsel" style="width:100%;font:inherit;font-size:11.5px"></select>
+  <button type="button" id="envimp" class="plein" style="margin-top:6px">Importer un panoramique…</button>
+  <div id="envnom" class="cqf"></div>
+  <input type="file" id="envfile" accept="image/*" hidden />
+  <div class="row"><label for="envint">Ambiante</label><span id="envintv">95 %</span></div>
+  <input type="range" id="envint" min="0" max="200" value="95" />
+  <div class="row"><label for="envrot">Rotation</label><span id="envrotv">0°</span></div>
+  <input type="range" id="envrot" min="0" max="360" value="0" />
+  <div class="row"><label for="envfond">Voir l'environnement</label><input type="checkbox" id="envfond" checked /></div>
+  <div class="row"><label for="expo">Exposition</label><span id="expov">128 %</span></div>
+  <input type="range" id="expo" min="40" max="240" value="128" />
+  <div class="row"><label for="satur">Vivacité</label><span id="saturv">124 %</span></div>
+  <input type="range" id="satur" min="60" max="200" value="124" />
+  <div class="sect"><span>Calques</span><button type="button" id="add">+ Calque</button></div>
+  <div id="couches"></div>
+  <input type="file" id="fchoix" accept="image/*" hidden />
+  <div class="bloc-part">
+    <div class="sect"><span>Partage client</span></div>
+    <button type="button" id="part" class="plein">Enregistrer cette vue</button>
+    <button type="button" id="recharger" class="plein" style="margin-top:4px">Recharger la vue</button>
+    <div id="partmsg" class="cqf"></div>
+  </div>
+  <div class="leg" style="display:none" id="leg">
+    <span><i class="sw" style="background:#c9b393"></i>Parois</span>
+    <span><i class="sw" style="background:#7fc4e3"></i>Couvercle</span>
+    <span><i class="sw" style="background:#e0857a"></i>Fond</span>
+    <span><i class="sw" style="background:#d3c6a8"></i>Rabats intérieurs</span>
+    <span><i class="sw" style="background:#8fbf8a"></i>Cloisons</span>
+  </div>
+</div>
+<three-d-stage name="patron-plie" background="#efe9df"></three-d-stage>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" fill="#c39a6b" />
+    <g fill="none" stroke="#5a4326" stroke-width="3">
+      <rect x="36" y="36" width="48" height="48" />
+      <path d="M36 52h48M36 68h48M52 36v48M68 36v48" stroke-width="1.5" />
+    </g>
+  </svg>
+</template>
+<script src="three-d-stage.js"></script>
+<script type="module" src="patron-plie.js"></script>
+</body>
+</html>

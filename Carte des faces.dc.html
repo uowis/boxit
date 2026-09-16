@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+body{margin:0;background:#f3efe8}
+a{color:#9a3412}
+a:hover{color:#7c2d12}
+</style>
+</helmet>
+
+<div style="padding:28px 32px 40px;font-family:'IBM Plex Mono',monospace;max-width:1400px;margin:0 auto">
+
+<div style="font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#9a3412;margin-bottom:8px">Relevé du patron — uploads/patron_faces.pdf</div>
+<h1 style="font-family:Newsreader,serif;font-size:28px;font-weight:600;margin:0 0 6px;color:#241f1a">17 faces, cotes en millimètres</h1>
+<p style="font-family:Newsreader,serif;font-size:15px;line-height:1.5;color:#6b6158;margin:0 0 22px;max-width:60ch">Géométrie extraite des tracés vectoriels, pas d'une image. Planche 1171 × 493 mm, origine en haut à gauche. Vérifie les noms : c'est sur eux que sera construite la hiérarchie.</p>
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#4a4036;margin-bottom:22px">
+<span style="display:flex;align-items:center;gap:7px"><span style="width:13px;height:13px;background:#f6c9c3;border:1px solid #4a4036"></span>Fond (rouge)</span>
+<span style="display:flex;align-items:center;gap:7px"><span style="width:13px;height:13px;background:#bfe6f5;border:1px solid #4a4036"></span>Couvercle (bleu)</span>
+<span style="display:flex;align-items:center;gap:7px"><span style="width:13px;height:13px;background:#d9cbb4;border:1px solid #4a4036"></span>Parois</span>
+<span style="display:flex;align-items:center;gap:7px"><span style="width:13px;height:13px;background:#e4dcc9;border:1px solid #4a4036"></span>Rabats intérieurs</span>
+<span style="display:flex;align-items:center;gap:7px"><span style="width:13px;height:13px;background:#cfe3cc;border:1px solid #4a4036"></span>Cloisons</span>
+<span style="display:flex;align-items:center;gap:7px"><span style="width:13px;height:13px;background:#e8ded0;border:1px solid #4a4036"></span>Patte de collage</span>
+</div>
+
+<div style="background:#fff;border:1px solid #ddd4c6;padding:18px">
+<img src="patron-faces.svg" alt="Carte des faces du patron" style="width:100%;height:auto;display:block" />
+</div>
+
+<h2 style="font-family:Newsreader,serif;font-size:19px;font-weight:600;margin:34px 0 12px;color:#241f1a">Table de montage</h2>
+<p style="font-family:Newsreader,serif;font-size:14px;line-height:1.5;color:#6b6158;margin:0 0 14px;max-width:70ch">Exactement ce que contient le MaxScript et <a href="patron-plie.html">la maquette interactive</a>. Le pivot est posé sur la ligne de pli, dans le plan de la peau extérieure (z = 0). Angle négatif = la face part vers l'arrière du patron.</p>
+
+<div style="background:#fff;border:1px solid #ddd4c6;overflow-x:auto">
+<table style="border-collapse:collapse;width:100%;min-width:760px;font-size:11.5px">
+<thead>
+<tr style="background:#f7f3ec">
+<th style="text-align:left;padding:9px 12px;border-bottom:1px solid #ddd4c6;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6f62;font-weight:500">Objet</th>
+<th style="text-align:left;padding:9px 12px;border-bottom:1px solid #ddd4c6;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6f62;font-weight:500">Cotes</th>
+<th style="text-align:left;padding:9px 12px;border-bottom:1px solid #ddd4c6;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6f62;font-weight:500">Pivot</th>
+<th style="text-align:left;padding:9px 12px;border-bottom:1px solid #ddd4c6;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6f62;font-weight:500">Axe</th>
+<th style="text-align:right;padding:9px 12px;border-bottom:1px solid #ddd4c6;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6f62;font-weight:500">Angle</th>
+<th style="text-align:left;padding:9px 12px;border-bottom:1px solid #ddd4c6;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6f62;font-weight:500">Parent</th>
+</tr>
+</thead>
+<tbody>
+
+<tr style="background:#f2ede4">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a;font-weight:500">paroi_avant</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">323 × 164</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">442,5 / 246,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#9a8f80">—</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#9a8f80">racine</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#9a8f80">—</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">paroi_gauche</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">246 × 171</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">281 / 246,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">Y</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_avant</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">paroi_droite</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">246 × 171</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">604 / 246,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">Y</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_avant</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">paroi_arriere</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">321 × 164</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">850 / 246,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">Y</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_droite</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">patte_collage</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">35 × 164</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">35 / 246,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">Y</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_gauche</td>
+</tr>
+
+<tr style="background:#eef7fb">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">couvercle_gauche</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">238 × 161, r10</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">158 / 332</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_gauche</td>
+</tr>
+
+<tr style="background:#eef7fb">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">couvercle_droit</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">238 × 161, r10</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">727 / 332</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_droite</td>
+</tr>
+
+<tr style="background:#fdf0ee">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">fond_gauche</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">238 × 161, r10</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">158 / 161</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_gauche</td>
+</tr>
+
+<tr style="background:#fdf0ee">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">fond_droit</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">238 × 161, r10</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">727 / 161</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_droite</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">rabat_int_avant_haut</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">315 × 83 + languette</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">442,5 / 328,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_avant</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">rabat_int_avant_bas</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">315 × 83 + languette</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">442,5 / 164,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_avant</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">rabat_int_arriere_haut</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">314 × 83 + languette</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">1010,5 / 328,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_arriere</td>
+</tr>
+
+<tr>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">rabat_int_arriere_bas</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">314 × 83 + languette</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">1010,5 / 164,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">paroi_arriere</td>
+</tr>
+
+<tr style="background:#f0f6ef">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">cloison_A</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">315 × 81,5, encoche</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">442,5 / 411,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">rabat_int_avant_haut</td>
+</tr>
+
+<tr style="background:#f0f6ef">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">cloison_B</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">314 × 81,5, encoche</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">1010,5 / 411,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">−90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">rabat_int_arriere_haut</td>
+</tr>
+
+<tr style="background:#f0f6ef">
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#241f1a">cloison_C</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">315 × 81,5, encoche</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">442,5 / 81,5</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#4a4036">X</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;border-bottom:1px solid #efeae1;color:#7a6f62">rabat_int_avant_bas</td>
+</tr>
+
+<tr style="background:#f0f6ef">
+<td style="padding:8px 12px;color:#241f1a">cloison_D</td>
+<td style="padding:8px 12px;color:#4a4036">314 × 81,5, encoche</td>
+<td style="padding:8px 12px;color:#4a4036">1010,5 / 81,5</td>
+<td style="padding:8px 12px;color:#4a4036">X</td>
+<td style="padding:8px 12px;text-align:right;color:#4a4036">+90°</td>
+<td style="padding:8px 12px;color:#7a6f62">rabat_int_arriere_bas</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<h2 style="font-family:Newsreader,serif;font-size:19px;font-weight:600;margin:34px 0 12px;color:#241f1a">Ce que dit la géométrie</h2>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+
+<div style="background:#fff;border:1px solid #ddd4c6;padding:16px">
+<div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#9a3412;margin-bottom:8px">Ceinture</div>
+<p style="font-family:Newsreader,serif;font-size:14px;line-height:1.55;color:#3a322a;margin:0">Patte 35 + gauche 246 + avant 323 + droite 246 + arrière 321 = 1171 mm. Les 321 au lieu de 323 sur l'arrière, c'est le jeu de fermeture sur la patte.</p>
+</div>
+
+<div style="background:#fff;border:1px solid #ddd4c6;padding:16px">
+<div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#9a3412;margin-bottom:8px">Fond et couvercle</div>
+<p style="font-family:Newsreader,serif;font-size:14px;line-height:1.55;color:#3a322a;margin:0">4 panneaux de 238 × 161, deux par deux. 161 + 161 = 322 pour 323 de long : le millimètre manquant est le jeu central dont on parlait.</p>
+</div>
+
+<div style="background:#fff;border:1px solid #ddd4c6;padding:16px">
+<div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#9a3412;margin-bottom:8px">Rabats et cloisons</div>
+<p style="font-family:Newsreader,serif;font-size:14px;line-height:1.55;color:#3a322a;margin:0">Les rabats font 123 de profondeur : 123 + 123 = 246, la largeur exacte. Chaque cloison de 81,5 est solidaire de son rabat et le chevauche de 40 mm — c'est la languette qui vient dans l'encoche.</p>
+</div>
+
+<div style="background:#fff;border:1px solid #ddd4c6;padding:16px">
+<div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#9a3412;margin-bottom:8px">Point à confirmer</div>
+<p style="font-family:Newsreader,serif;font-size:14px;line-height:1.55;color:#3a322a;margin:0">Les parois latérales mesurent 171 et non 164 : 3,5 mm de débord haut et bas. Oreilles de reprise, ou tolérance de tracé ?</p>
+</div>
+
+</div>
+</div>
+
+</x-dc>
+</body>
+</html>

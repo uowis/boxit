@@ -1,0 +1,5 @@
+node_modules/
+media/
+etats/
+.DS_Store
+npm-debug.log*
