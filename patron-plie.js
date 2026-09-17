@@ -14,7 +14,7 @@ const RIG = {
   pAvant:   { pivot: [281, 246.5], parent: 'pGauche', a: 90, ax: 'y' },
   pDroite:  { pivot: [604, 246.5], parent: 'pAvant', a: 90, ax: 'y' },
   pArriere: { pivot: [850, 246.5], parent: 'pDroite', a: 90, ax: 'y' },
-  patte:    { pivot: [35, 246.5], parent: 'pGauche', a: -90, ax: 'y' },
+  patte:    { pivot: [35, 246.5], parent: 'pGauche', a: -95, ax: 'y' },
 
   couvG: { pivot: [158, 332], parent: 'pGauche', a: -90, ax: 'x' },
   couvD: { pivot: [727, 332], parent: 'pDroite', a: -90, ax: 'x' },
@@ -476,6 +476,9 @@ function fold(t) {
       const a = THREE.MathUtils.degToRad(rig.a * ease(u));
       pivots[k].rotation.set(0, 0, 0);
       if (rig.ax === 'x') pivots[k].rotation.x = a; else pivots[k].rotation.y = a;
+      /* La patte de montage se colle à l'intérieur de la paroi : elle pivote
+         un peu au-delà de 90° (voir RIG) pour rentrer dans la caisse au lieu
+         d'être coplanaire avec la face arrière et de clignoter à travers. */
     }
   });
   pivots.fondG.rotation.set(0, 0, 0);
